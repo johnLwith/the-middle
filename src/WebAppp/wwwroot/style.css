@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.player {
+    margin-bottom: 20px;
+}
+
+audio {
+    width: 100%;
+}
+
+.subtitles {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.subtitle-line {
+    padding: 8px;
+    margin: 4px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.subtitle-line:hover {
+    background-color: #f0f0f0;
+}
+
+.subtitle-line.active {
+    background-color: #e3f2fd;
+}
+
+.subtitle-time {
+    color: #666;
+    font-size: 0.9em;
+    margin-right: 10px;
+    font-family: monospace;
+}
+
+.subtitle-text {
+    display: inline-block;
+}
+
+.episode-list {
+    margin: 20px 0;
+}
+
+#episode-select {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+#episode-select:focus {
+    outline: none;
+    border-color: #666;
+}
+
+#all-subtitles {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
