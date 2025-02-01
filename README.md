@@ -1,6 +1,6 @@
 # Simple ASP.NET Core Web Application
 
-This is a basic ASP.NET Core 6.0 web application with static file support.
+This is a basic ASP.NET Core 8.0 web application with static file support.
 
 ## Project Structure
 - `Program.cs` - Main application entry point and configuration
@@ -10,7 +10,7 @@ This is a basic ASP.NET Core 6.0 web application with static file support.
 
 ## Running the Application
 
-1. Ensure you have .NET 6.0 SDK installed
+1. Ensure you have .NET 8.0 SDK installed
 2. Open a terminal in the project directory
 3. Run the following commands:
    ```
