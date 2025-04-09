@@ -49,9 +49,10 @@ function displayAllSubtitles() {
         </div>
     `).join('');
 
-    document.querySelectorAll('.subtitle-line').forEach(line => {
-        line.addEventListener('click', () => {
-            const startTime = timeToSeconds(line.dataset.start);
+    document.querySelectorAll('.subtitle-time').forEach(line => {
+        line.addEventListener('click', (e) => {
+            const parentLine = e.target.parentElement;
+            const startTime = timeToSeconds(parentLine.dataset.start);
             const audioPlayer = document.getElementById('audio-player');
             audioPlayer.currentTime = startTime;
             audioPlayer.play();
@@ -76,7 +77,6 @@ function updateSubtitleDisplay(currentTime) {
         
         line.classList.toggle('active', isActive);
         
-        // Scroll to active line when it becomes active
         if (!wasActive && isActive) {
             line.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -87,11 +87,9 @@ async function changeEpisode(episode) {
     currentEpisode = episode;
     const audioPlayer = document.getElementById('audio-player');
     
-    // Reset current playback
     audioPlayer.pause();
     audioPlayer.currentTime = 0;
     
-    // Load new episode
     await loadSubtitles();
     audioPlayer.src = `/api/media/audio/${currentEpisode}`;
 }
