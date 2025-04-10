@@ -1,0 +1,27 @@
+.subtitle-item {
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.subtitle-item:hover {
+  background-color: #f0f0f0;
+}
+
+.subtitle-item.active {
+  background-color: #e0e0e0;
+}
+
+.subtitle-time {
+  display: inline-block;
+  min-width: 80px;
+  color: #666;
+  font-size: 0.9rem;
+  margin-right: 1rem;
+}
+
+.subtitle-text {
+  color: #333;
+} 

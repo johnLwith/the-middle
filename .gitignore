@@ -194,3 +194,4 @@ ServiceFabricBackup/
 # macOS
 .DS_Store 
 src/WebAppp/wwwroot/data/
+src/WebAppp/appsettings.Development.json

@@ -1,0 +1,77 @@
+.episode-detail {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.container {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.player {
+  margin: 2rem 0;
+}
+
+.player audio {
+  width: 100%;
+}
+
+.current-subtitle {
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 2rem 0;
+  min-height: 3rem;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.subtitles {
+  margin: 2rem 0;
+}
+
+.all-subtitles {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.subtitle-line {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subtitle-line:hover {
+  background-color: #f5f5f5;
+}
+
+.subtitle-time {
+  color: #666;
+  margin-right: 1rem;
+  font-family: monospace;
+}
+
+.subtitle-text {
+  color: #333;
+}
+
+.back-button {
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background: #0056b3;
+} 
