@@ -13,6 +13,7 @@
     "@types/react-dom": "^19.0.0",
     "axios": "^1.8.4",
     "react": "^19.1.0",
+    "react-app": "file:",
     "react-dom": "^19.1.0",
     "react-router-dom": "6.22.0",
     "react-scripts": "5.0.1",
