@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using WebAppp.Data;
 using System.Net.Http;
+using WebAppp.Services;
+using Microsoft.SemanticKernel.Connectors.Ollama;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 
 // Add HttpClient
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<EmbeddingService>();
+builder.Services.AddScoped<OllamaTextEmbeddingGeneration>();
 
 // Add CORS configuration
 builder.Services.AddCors(options =>

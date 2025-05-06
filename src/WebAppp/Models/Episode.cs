@@ -9,7 +9,7 @@ namespace WebAppp.Models
         [Key]
         [Column("id")]
         [StringLength(20)]
-        public string? Id { get; set; }
+        public required string Id { get; set; }
 
         [Required]
         [Column("season_number")]
