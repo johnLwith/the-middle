@@ -4,6 +4,20 @@ import { api, Episode, Subtitle } from '../services/api';
 import SubtitleItem from './SubtitleItem';
 import './EpisodeDetail.css';
 
+const POS_COLORS = {
+  NOUN: '#4CAF50',
+  VERB: '#2196F3',
+  ADJ: '#FF9800',
+  ADV: '#9C27B0',
+  PRON: '#607D8B',
+  DET: '#795548',
+  ADP: '#009688',
+  CONJ: '#673AB7',
+  NUM: '#E91E63',
+  PRT: '#00BCD4',
+  X: '#9E9E9E',
+};
+
 const EpisodeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -12,6 +26,8 @@ const EpisodeDetail: React.FC = () => {
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [currentSubtitle, setCurrentSubtitle] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [analysisData, setAnalysisData] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchEpisodeData = async () => {
@@ -20,8 +36,16 @@ const EpisodeDetail: React.FC = () => {
         setEpisode(episodeData);
         
         const subtitleData = await api.episodes.getSubtitles(id!);
-        setSubtitles(subtitleData);
+        const analysisData = await api.episodes.analyzeSubtitle(id!);
         
+        const subtitlesWithAnalysis = subtitleData.map(subtitle => ({
+          startTime: subtitle.startTime,
+          endTime: subtitle.endTime,
+          text: subtitle.text
+        }));
+        
+        setSubtitles(subtitlesWithAnalysis);
+        setAnalysisData(analysisData.analysis || []);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching episode data:', error);
@@ -86,10 +110,45 @@ const EpisodeDetail: React.FC = () => {
           >
             Your browser does not support the audio element.
           </audio>
+          <button 
+            onClick={() => setShowAnalysis(!showAnalysis)} 
+            className="analyze-toggle"
+          >
+            {showAnalysis ? 'Hide Analysis' : 'Show Analysis'}
+          </button>
         </div>
 
         <div className="current-subtitle">
-          {currentSubtitle}
+          {showAnalysis && currentSubtitle ? (
+            <div className="analysis-container">
+              <div className="subtitle-text">
+                {currentSubtitle.split(' ').map((word, i) => {
+                  const analysis = analysisData.find(item => item.word === word);
+                  console.log('Analysis for word:', word, analysis);
+                  const color = analysis ? POS_COLORS[analysis.tag as keyof typeof POS_COLORS] : 'inherit';
+                  return (
+                    <span 
+                      key={i} 
+                      style={{ color }}
+                    >
+                      {word}
+                    </span>
+                  );
+                })}
+              </div>
+              <div className="analysis-details">
+                {analysisData
+                  .filter(item => currentSubtitle.includes(item.word))
+                  .map((item, i) => (
+                    <div key={i} className="analysis-item">
+                      <div className="analysis-label">{item.word}:</div>
+                      <div className="analysis-value">{item.type} ({item.tag})</div>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          ) : currentSubtitle}
         </div>
 
         <div className="subtitles">
@@ -115,4 +174,4 @@ const EpisodeDetail: React.FC = () => {
   );
 };
 
-export default EpisodeDetail; 
+export default EpisodeDetail;

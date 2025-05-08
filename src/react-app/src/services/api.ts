@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { NlpAnalysisResponse } from '../types/nlp';
 
 const API_BASE_URL = 'http://localhost:5001/api';
 
@@ -16,6 +17,7 @@ export interface Subtitle {
   startTime: string;
   endTime: string;
   text: string;
+  analysis?: NlpAnalysisResponse;
 }
 
 export const api = {
@@ -31,6 +33,10 @@ export const api = {
     getSubtitles: async (id: string): Promise<Subtitle[]> => {
       const response = await axios.get(`${API_BASE_URL}/Episodes/${id}/subtitles`);
       return response.data;
+    },
+    analyzeSubtitle: async (id: string): Promise<NlpAnalysisResponse> => {
+      const response = await axios.get(`${API_BASE_URL}/Episodes/${id}/analyze`);
+      return response.data;
     }
   }
-}; 
+};

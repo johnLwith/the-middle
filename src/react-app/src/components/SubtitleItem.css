@@ -4,6 +4,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  position: relative;
 }
 
 .subtitle-item:hover {
@@ -22,6 +23,70 @@
   margin-right: 1rem;
 }
 
+.subtitle-text-container {
+  position: relative;
+  display: inline-block;
+}
+
 .subtitle-text {
   color: #333;
-} 
+  cursor: pointer;
+}
+
+.word {
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.word:hover {
+  background-color: #e8f4ff;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 1000;
+  min-width: 120px;
+}
+
+.tooltip button {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  margin: 4px 0;
+  border: none;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  border-radius: 3px;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.tooltip button:hover {
+  background-color: #e0e0e0;
+}
+
+.play-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: #666;
+}
+
+.subtitle-item:hover .play-button {
+  opacity: 1;
+}

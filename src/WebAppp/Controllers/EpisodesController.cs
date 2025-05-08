@@ -5,6 +5,8 @@ using WebAppp.Models;
 using System.Text.Json;
 using System.Net.Http;
 using System.Linq;
+using WebAppp.Services;
+using System.Collections.Generic;
 
 namespace WebAppp.Controllers
 {
@@ -16,12 +18,14 @@ namespace WebAppp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
         private readonly HttpClient _httpClient;
+        private readonly INlpService _nlpService;
 
-        public EpisodesController(ApplicationDbContext context, IWebHostEnvironment environment, HttpClient httpClient)
+        public EpisodesController(ApplicationDbContext context, IWebHostEnvironment environment, HttpClient httpClient, INlpService nlpService)
         {
             _context = context;
             _environment = environment;
             _httpClient = httpClient;
+            _nlpService = nlpService;
         }
 
         /// <summary>
@@ -143,17 +147,23 @@ namespace WebAppp.Controllers
                 return NotFound();
             }
 
-    
-                var response = await _httpClient.GetAsync(episode.SubtitlePath);
-                if (!response.IsSuccessStatusCode)
-                {
-                    return NotFound();
-                }
+            var response = await _httpClient.GetAsync(episode.SubtitlePath);
+            if (!response.IsSuccessStatusCode)
+            {
+                return NotFound();
+            }
 
-                var subtitleContent = await response.Content.ReadAsStringAsync();
+            List<SubtitleItem> subtitles = await GetSutitleItems(response);
+
+            return Ok(subtitles);
+        }
+
+        private static async Task<List<SubtitleItem>> GetSutitleItems(HttpResponseMessage response)
+        {
+            var subtitleContent = await response.Content.ReadAsStringAsync();
             var subtitles = new List<SubtitleItem>();
             var lines = subtitleContent.Split(Environment.NewLine);
-            
+
             for (int i = 0; i < lines.Length;)
             {
                 if (string.IsNullOrWhiteSpace(lines[i]))
@@ -183,7 +193,37 @@ namespace WebAppp.Controllers
                 subtitles.Add(subtitle);
             }
 
-            return Ok(subtitles);
-        
-    }}
+            return subtitles;
+        }
+
+        /// <summary>
+        /// Analyzes the text of a subtitle using NLP for POS tagging
+        /// </summary>
+        /// <param name="id">The subtitle ID</param>
+        /// <returns>NLP analysis results including POS tags</returns>
+        /// <response code="200">Returns the NLP analysis results</response>
+        /// <response code="404">If the subtitle is not found</response>
+        [HttpGet("{id}/analyze")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<NlpAnalysisResponse>> AnalyzeSubtitle(string id)
+        {
+            var episode = await _context.Episodes.FindAsync(id);
+            if (episode == null || string.IsNullOrEmpty(episode.SubtitlePath))
+            {
+                return NotFound();
+            }
+
+            var response = await _httpClient.GetAsync(episode.SubtitlePath);
+            if (!response.IsSuccessStatusCode)
+            {
+                return NotFound();
+            }
+
+           List<SubtitleItem> subtitles = await GetSutitleItems(response);
+           var subtitleContent = subtitles.Select(s => s.Text).Aggregate((a, b) => a + " " + b);
+           var analysis = await _nlpService.AnalyzeTextAsync(subtitleContent);
+           return Ok(analysis);
+        }
+    }
 }

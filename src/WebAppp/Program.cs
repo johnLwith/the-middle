@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<EmbeddingService>();
 builder.Services.AddScoped<OllamaTextEmbeddingGeneration>();
+builder.Services.AddScoped<INlpService, NlpService>();
+
 
 // Add CORS configuration
 builder.Services.AddCors(options =>
