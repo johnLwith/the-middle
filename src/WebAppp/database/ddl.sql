@@ -17,3 +17,16 @@ CREATE TABLE public."episodes_embeddings" (
     CONSTRAINT episodes_embeddings_episodes_id_fkey FOREIGN KEY (episodes_id) 
         REFERENCES public.episodes(id)
 );
+
+CREATE TABLE public.words (
+	id serial4 NOT NULL,
+	word varchar(255) NOT NULL,
+	episode_id varchar(20) NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	CONSTRAINT words_pkey PRIMARY KEY (id)
+);
+
+
+-- public.words foreign keys
+
+ALTER TABLE public.words ADD CONSTRAINT fk_words_episodes FOREIGN KEY (episode_id) REFERENCES public.episodes(id) ON DELETE CASCADE ON UPDATE CASCADE;

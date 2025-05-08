@@ -31,6 +31,11 @@ export const api = {
       return response.data;
     }
   },
+  wordbook: {
+    addWord: async (word: string, episodeId: string): Promise<void> => {
+      await axios.post(`${API_BASE_URL}/Wordbook`, { word, episodeId });
+    }
+  },
   episodes: {
     getAll: async (): Promise<Episode[]> => {
       const response = await axios.get(`${API_BASE_URL}/Episodes`);

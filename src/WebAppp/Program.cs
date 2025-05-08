@@ -15,6 +15,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<OllamaTextEmbeddingGeneration>();
 builder.Services.AddScoped<INlpService, NlpService>();
 builder.Services.AddScoped<ITranslateService, DeepseekTranslateService>();
+builder.Services.AddScoped<IWordbookService, WordbookService>();
 
 
 // Add CORS configuration

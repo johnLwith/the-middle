@@ -11,6 +11,7 @@ namespace WebAppp.Data
         }
 
         public DbSet<Episode> Episodes { get; set; }
+        public DbSet<Word> Words { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,6 +19,9 @@ namespace WebAppp.Data
 
             modelBuilder.Entity<Episode>()
                 .ToTable("episodes", "public");
+
+            modelBuilder.Entity<Word>()
+                .ToTable("words", "public");
         }
     }
-} 
+}

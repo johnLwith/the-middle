@@ -156,6 +156,7 @@ const EpisodeDetail: React.FC = () => {
             {subtitles.map((sub, index) => (
               <SubtitleItem
                 key={index}
+                episodeId={id!}
                 startTime={sub.startTime}
                 endTime={sub.endTime}
                 text={sub.text}

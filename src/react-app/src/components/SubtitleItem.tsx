@@ -3,6 +3,7 @@ import { api } from '../services/api';
 import './SubtitleItem.css';
 
 interface SubtitleItemProps {
+  episodeId: string;
   startTime: string;
   endTime: string;
   text: string;
@@ -11,6 +12,7 @@ interface SubtitleItemProps {
 }
 
 const SubtitleItem: React.FC<SubtitleItemProps> = ({
+  episodeId,
   startTime,
   endTime,
   text,
@@ -26,6 +28,8 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
   const [currentWord, setcurrentWord] = useState("");
   const [translation, setTranslation] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
+  const [addedWords, setAddedWords] = useState<Set<string>>(new Set());
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const handleTranslate = async () => {
     try {
@@ -40,9 +44,15 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
     }
   };
 
-  const handleAddToWordBook = () => {
-    // TODO: Implement add to word book functionality
-    console.log('Add to word book:', currentWord);
+  const handleAddToWordBook = async () => {
+    try {
+      await api.wordbook.addWord(currentWord, episodeId);
+      setAddedWords(prev => new Set(prev).add(currentWord));
+      setSuccessMessage(`"${currentWord}" added to wordbook`);
+      setTimeout(() => setSuccessMessage(""), 2000);
+    } catch (error) {
+      console.error('Failed to add word to wordbook:', error);
+    }
   };
 
   return (
@@ -55,7 +65,7 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
           {text.split(' ').map((word, index) => (
             <span 
               key={index}
-              className="word"
+              className={` ${addedWords.has(word) ? 'added-word' : 'word'} ` }
               onClick={() => { setcurrentWord(word); setShowTooltip(true)}}
               onMouseLeave={() => setTimeout(()=>{ setShowTooltip(false)}, 2000)}
             >
@@ -70,6 +80,7 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
             </button>
             {translation && <div className="translation-result">{translation}</div>}
             <button onClick={handleAddToWordBook}>Add to Word Book</button>
+            {successMessage && <div className="success-message">{successMessage}</div>}
           </div>
         )}
       </div>
