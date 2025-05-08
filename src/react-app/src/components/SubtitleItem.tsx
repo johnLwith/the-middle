@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { api } from '../services/api';
 import './SubtitleItem.css';
 
 interface SubtitleItemProps {
@@ -23,10 +24,20 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
 
   const [showTooltip, setShowTooltip] = useState(false);
   const [currentWord, setcurrentWord] = useState("");
+  const [translation, setTranslation] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
 
-  const handleTranslate = () => {
-    // TODO: Implement translation functionality
-    console.log('Translate:', currentWord);
+  const handleTranslate = async () => {
+    try {
+      setIsTranslating(true);
+      const response = await api.translate.getTranslation(currentWord);
+      setTranslation(response.translation);
+    } catch (error) {
+      console.error('Translation error:', error);
+      setTranslation('Translation failed');
+    } finally {
+      setIsTranslating(false);
+    }
   };
 
   const handleAddToWordBook = () => {
@@ -54,7 +65,10 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
         </div>
         {showTooltip && (
           <div className="tooltip">
-            <button onClick={handleTranslate}>Translate</button>
+            <button onClick={handleTranslate} disabled={isTranslating}>
+              {isTranslating ? 'Translating...' : 'Translate'}
+            </button>
+            {translation && <div className="translation-result">{translation}</div>}
             <button onClick={handleAddToWordBook}>Add to Word Book</button>
           </div>
         )}

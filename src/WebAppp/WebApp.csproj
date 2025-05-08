@@ -17,6 +17,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.45.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Postgres" Version="1.45.0-preview" />
+	<PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.45.0" />
   </ItemGroup>
 
 </Project> 

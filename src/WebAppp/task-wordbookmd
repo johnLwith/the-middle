@@ -1,0 +1,20 @@
+# Task Translate
+
+# Description
+需要添加一个API, 将word存储到数据库, 数据库需要添加一张表， 表名为wordbook, 表结构为
+```
+表3-3 Words表
+字段名	数据类型	描述
+id	SERIAL	单词唯一标识
+word	VARCHAR	单词拼写
+subtitle_id	string	关联的字幕 ID
+created_at	TIMESTAMP	创建时间
+```
+
+# API service spec
+Add Word to Wordbook
+POST /wordbook
+{
+  "word": "word",
+  "subtitle_id": "subtitle_id"
+}

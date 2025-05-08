@@ -20,7 +20,17 @@ export interface Subtitle {
   analysis?: NlpAnalysisResponse;
 }
 
+export interface TranslationResponse {
+  translation: string;
+}
+
 export const api = {
+  translate: {
+    getTranslation: async (word: string): Promise<TranslationResponse> => {
+      const response = await axios.get(`${API_BASE_URL}/Translate?word=${word}`);
+      return response.data;
+    }
+  },
   episodes: {
     getAll: async (): Promise<Episode[]> => {
       const response = await axios.get(`${API_BASE_URL}/Episodes`);
