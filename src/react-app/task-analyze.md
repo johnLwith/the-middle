@@ -4,7 +4,7 @@
 后端将返回一个JSON格式的结果，包含每个单词的词性标签。
 
 ### API
-https://localhost:7001/api/Episodes/tm11/analyze
+https://localhost:7001/api/Episodes/tm11/analyze?text={text}
 
 ```json
   "analysis": [
@@ -23,8 +23,8 @@ https://localhost:7001/api/Episodes/tm11/analyze
 ```
 
 ## Frontend
-前端将接收后端返回的结果，并将各个页面的词性标签显示在页面上。
-将词性分类，用户可在设置中开启 “语法高亮”，单词按词性显示不同颜色（名词 #FFEB3B、动词 #2196F3、形容词 #4CAF50），鼠标悬停显示详细词性标签及词干（如 “ran→run（动词）”）；
+在SubtitleItem.tsx中加入一个按钮， 放在play-button后面, 点击按钮后，调用后端的API，传入当前页面的文本。
+前端将接收后端返回的结果，单词按词性显示不同颜色（名词 #FFEB3B、动词 #2196F3、形容词 #4CAF50），鼠标悬停显示详细词性标签及词干（如 “ran→run（动词）”）；
 
 ```txt
 The API uses the following POS tags:

@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using WebAppp.Data;
 using WebAppp.Models;
-using System.Text.Json;
-using System.Net.Http;
-using System.Linq;
 using WebAppp.Services;
-using System.Collections.Generic;
 
 namespace WebAppp.Controllers
 {
@@ -28,11 +29,6 @@ namespace WebAppp.Controllers
             _nlpService = nlpService;
         }
 
-        /// <summary>
-        /// Gets all episodes
-        /// </summary>
-        /// <returns>List of all episodes</returns>
-        /// <response code="200">Returns the list of episodes</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Episode>>> GetEpisodes()
@@ -43,13 +39,6 @@ namespace WebAppp.Controllers
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Gets a specific episode by ID
-        /// </summary>
-        /// <param name="id">The episode ID</param>
-        /// <returns>The requested episode</returns>
-        /// <response code="200">Returns the requested episode</response>
-        /// <response code="404">If the episode is not found</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -65,13 +54,6 @@ namespace WebAppp.Controllers
             return episode;
         }
 
-        /// <summary>
-        /// Creates a new episode
-        /// </summary>
-        /// <param name="episode">The episode to create</param>
-        /// <returns>The created episode</returns>
-        /// <response code="201">Returns the newly created episode</response>
-        /// <response code="400">If the episode data is invalid</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,15 +65,6 @@ namespace WebAppp.Controllers
             return CreatedAtAction(nameof(GetEpisode), new { id = episode.Id }, episode);
         }
 
-        /// <summary>
-        /// Updates an existing episode
-        /// </summary>
-        /// <param name="id">The episode ID</param>
-        /// <param name="episode">The updated episode data</param>
-        /// <returns>No content if successful</returns>
-        /// <response code="204">If the episode was successfully updated</response>
-        /// <response code="400">If the episode data is invalid</response>
-        /// <response code="404">If the episode is not found</response>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -129,13 +102,6 @@ namespace WebAppp.Controllers
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Gets subtitles for a specific episode
-        /// </summary>
-        /// <param name="id">The episode ID</param>
-        /// <returns>The episode's subtitles</returns>
-        /// <response code="200">Returns the episode's subtitles</response>
-        /// <response code="404">If the episode or subtitles are not found</response>
         [HttpGet("{id}/subtitles")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -196,33 +162,12 @@ namespace WebAppp.Controllers
             return subtitles;
         }
 
-        /// <summary>
-        /// Analyzes the text of a subtitle using NLP for POS tagging
-        /// </summary>
-        /// <param name="id">The subtitle ID</param>
-        /// <returns>NLP analysis results including POS tags</returns>
-        /// <response code="200">Returns the NLP analysis results</response>
-        /// <response code="404">If the subtitle is not found</response>
-        [HttpGet("{id}/analyze")]
+        [HttpGet("analyze")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<NlpAnalysisResponse>> AnalyzeSubtitle(string id)
+        public async Task<ActionResult<NlpAnalysisResponse>> AnalyzeSubtitle([MaxLength(100)]string text)
         {
-            var episode = await _context.Episodes.FindAsync(id);
-            if (episode == null || string.IsNullOrEmpty(episode.SubtitlePath))
-            {
-                return NotFound();
-            }
-
-            var response = await _httpClient.GetAsync(episode.SubtitlePath);
-            if (!response.IsSuccessStatusCode)
-            {
-                return NotFound();
-            }
-
-           List<SubtitleItem> subtitles = await GetSutitleItems(response);
-           var subtitleContent = subtitles.Select(s => s.Text).Aggregate((a, b) => a + " " + b);
-           var analysis = await _nlpService.AnalyzeTextAsync(subtitleContent);
+           var analysis = await _nlpService.AnalyzeTextAsync(text);
            return Ok(analysis);
         }
     }

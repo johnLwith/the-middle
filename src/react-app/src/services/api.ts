@@ -49,8 +49,8 @@ export const api = {
       const response = await axios.get(`${API_BASE_URL}/Episodes/${id}/subtitles`);
       return response.data;
     },
-    analyzeSubtitle: async (id: string): Promise<NlpAnalysisResponse> => {
-      const response = await axios.get(`${API_BASE_URL}/Episodes/${id}/analyze`);
+    analyzeSubtitle: async (text: string): Promise<NlpAnalysisResponse> => {
+      const response = await axios.get(`${API_BASE_URL}/Episodes/analyze?text=${text}`);
       return response.data;
     }
   }

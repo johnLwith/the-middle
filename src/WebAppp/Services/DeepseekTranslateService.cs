@@ -5,23 +5,11 @@ namespace WebAppp.Services
 {
     public class DeepseekTranslateService : ITranslateService
     {
-        private readonly IConfiguration _configuration;
         private readonly Kernel _kernel;
 
-        public DeepseekTranslateService(IConfiguration configuration)
+        public DeepseekTranslateService(Kernel kernel)
         {
-            _configuration = configuration;
-            var kernelBuilder = Kernel.CreateBuilder();
-
-#pragma warning disable SKEXP0010
-            kernelBuilder.AddOpenAIChatCompletion(
-                modelId: configuration["DeepSeek:ModelId"], // Optional name of the underlying model if the deployment name doesn't match the model name
-                endpoint: new Uri(configuration["DeepSeek:Endpoint"]),
-                apiKey: configuration["DeepSeek:ApiKey"]
-            );
-#pragma warning restore SKEXP0010
-
-            _kernel = kernelBuilder.Build();
+            _kernel = kernel;
         }
 
         public async Task<string> TranslateWordAsync(string word)

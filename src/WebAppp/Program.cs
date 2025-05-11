@@ -4,11 +4,13 @@ using WebAppp.Data;
 using System.Net.Http;
 using WebAppp.Services;
 using Microsoft.SemanticKernel.Connectors.Ollama;
+using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
 
 // Add HttpClient
 builder.Services.AddHttpClient();
@@ -17,6 +19,20 @@ builder.Services.AddScoped<INlpService, NlpService>();
 builder.Services.AddScoped<ITranslateService, DeepseekTranslateService>();
 builder.Services.AddScoped<IWordbookService, WordbookService>();
 
+builder.Services.AddSingleton<Kernel>(x => {
+    var configuration = x.GetRequiredService<IConfiguration>();
+    var kernelBuilder = Kernel.CreateBuilder();
+
+#pragma warning disable SKEXP0010
+    kernelBuilder.AddOpenAIChatCompletion(
+        modelId: configuration["DeepSeek:ModelId"], // Optional name of the underlying model if the deployment name doesn't match the model name
+        endpoint: new Uri(configuration["DeepSeek:Endpoint"]),
+        apiKey: configuration["DeepSeek:ApiKey"]
+    );
+#pragma warning restore SKEXP0010
+
+    return kernelBuilder.Build();
+});
 
 // Add CORS configuration
 builder.Services.AddCors(options =>

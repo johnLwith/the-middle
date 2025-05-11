@@ -97,17 +97,32 @@
   100% { opacity: 0; }
 }
 
-.play-button {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.2s ease;
+.play-button, .analyze-button {
   background: none;
   border: none;
+  color: #4CAF50;
   cursor: pointer;
-  padding: 5px;
+  font-size: 1.2em;
+  padding: 0 5px;
+  transition: color 0.3s ease;
+}
+
+.play-button:hover, .analyze-button:hover {
+  color: #45a049;
+}
+
+.analyze-button {
+  margin-left: 5px;
+}
+
+.analyze-button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.pos-info {
+  margin-top: 5px;
+  font-size: 0.9em;
   color: #666;
 }
 
