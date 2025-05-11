@@ -46,7 +46,7 @@
 
 .sample-items {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -63,7 +63,7 @@
 .sample-item span {
   font-weight: bold;
   margin-bottom: 5px;
-  font-size: 0.9em;
+  font-size: 0.5em;
 }
 
 .sample-item small {

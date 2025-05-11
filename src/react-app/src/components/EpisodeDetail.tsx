@@ -1,9 +1,27 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api, Episode, Subtitle } from '../services/api';
-import { POS_COLORS } from '../types/nlp';
 import SubtitleItem from './SubtitleItem';
 import './EpisodeDetail.css';
+
+const POS_COLORS = {
+  NOUN: '#FFEB3B',  // Updated to match nlp.ts
+  VERB: '#2196F3',
+  ADJ: '#4CAF50'
+};
+
+const PosColorGuide: React.FC = () => (
+  <div className="pos-color-samples">
+    <h5>Parts of Speech Color Guide</h5>
+    <div className="sample-items">
+      {Object.entries(POS_COLORS).map(([pos, color]) => (
+        <div key={pos} className="sample-item" style={{ backgroundColor: color }}>
+          <span>{pos}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const EpisodeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +32,7 @@ const EpisodeDetail: React.FC = () => {
   const [currentSubtitle, setCurrentSubtitle] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const fetchEpisodeData = async () => {
       try {
@@ -21,14 +40,7 @@ const EpisodeDetail: React.FC = () => {
         setEpisode(episodeData);
         
         const subtitleData = await api.episodes.getSubtitles(id!);
-        
-        const subtitlesWithTiming = subtitleData.map(subtitle => ({
-          startTime: subtitle.startTime,
-          endTime: subtitle.endTime,
-          text: subtitle.text
-        }));
-        
-        setSubtitles(subtitlesWithTiming);
+        setSubtitles(subtitleData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching episode data:', error);
@@ -81,6 +93,7 @@ const EpisodeDetail: React.FC = () => {
 
   return (
     <div className="episode-detail">
+      <PosColorGuide />
       <div className="container">
         <h1>{episode.title || `Episode ${episode.episodeNumber}`}</h1>
         
@@ -93,28 +106,12 @@ const EpisodeDetail: React.FC = () => {
           >
             Your browser does not support the audio element.
           </audio>
+
         </div>
 
         <div className="current-subtitle">
           {currentSubtitle}
         </div>
-
-        <div className="pos-color-samples">
-          <h3>Parts of Speech Color Guide</h3>
-          <div className="sample-items">
-            <div className="sample-item" style={{ backgroundColor: POS_COLORS.NN }}>
-              <span>Nouns</span>
-              <small>(e.g., book, table)</small>
-            </div>
-            <div className="sample-item" style={{ backgroundColor: POS_COLORS.VB }}>
-              <span>Verbs</span>
-              <small>(e.g., run, eat)</small>
-            </div>
-            <div className="sample-item" style={{ backgroundColor: POS_COLORS.JJ }}>
-              <span>Adjectives</span>
-              <small>(e.g., happy, big)</small>
-            </div>
-          </div>
         </div>
 
         <div className="subtitles">
@@ -137,7 +134,6 @@ const EpisodeDetail: React.FC = () => {
           Back to Episodes
         </button>
       </div>
-    </div>
   );
 };
 

@@ -26,6 +26,7 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
   };
 
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
   const [currentWord, setcurrentWord] = useState("");
   const [translation, setTranslation] = useState("");
   const [isTranslating, setIsTranslating] = useState(false);
@@ -77,12 +78,13 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
 
 
   return (
-    <div className={`subtitle-item ${isActive ? 'active' : ''}`}>
+    <div className={`subtitle-item ${isActive ? 'active' : ''}`}
+    onMouseEnter={() => setShowButtons(true)}
+    onMouseLeave={() => setShowButtons(false)}
+    >
       <span className="subtitle-time">{formatTime(startTime)}</span>
       <div className="subtitle-text-container">
-        <div 
-          className="subtitle-text"
-        >
+        <div className="subtitle-text">
           {text.split(' ').map((word, index) => {
             const normalizedWord = word.toLowerCase().replace(/[.,!?"']/g, '');
             const wordStyle = analysis[normalizedWord] ? {
@@ -117,21 +119,25 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
           </div>
         )}
       </div>
-      <button 
-        className="play-button"
-        onClick={() => onClick(startTime)}
-        title="Play from this subtitle"
-      >
-        ▶
-      </button>
-      <button
-        className="analyze-button"
-        onClick={()=>handleAnalyze(text)}
-        disabled={isAnalyzing}
-        title="Analyze parts of speech"
-      >
-        {isAnalyzing ? '...' : '🔍'}
-      </button>
+      {showButtons && (
+        <>
+          <button 
+            className="play-button"
+            onClick={() => onClick(startTime)}
+            title="Play from this subtitle"
+          >
+            ▶
+          </button>
+          <button
+            className="analyze-button"
+            onClick={()=>handleAnalyze(text)}
+            disabled={isAnalyzing}
+            title="Analyze parts of speech"
+          >
+            {isAnalyzing ? '...' : '🔍'}
+          </button>
+        </>
+      )}
     </div>
   );
 };
