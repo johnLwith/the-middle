@@ -18,6 +18,7 @@ builder.Services.AddScoped<OllamaTextEmbeddingGeneration>();
 builder.Services.AddScoped<INlpService, NlpService>();
 builder.Services.AddScoped<ITranslateService, DeepseekTranslateService>();
 builder.Services.AddScoped<IWordbookService, WordbookService>();
+builder.Services.AddScoped<IEmbeddingService, EmbeddingService>();
 
 builder.Services.AddSingleton<Kernel>(x => {
     var configuration = x.GetRequiredService<IConfiguration>();
@@ -30,6 +31,13 @@ builder.Services.AddSingleton<Kernel>(x => {
         apiKey: configuration["DeepSeek:ApiKey"]
     );
 #pragma warning restore SKEXP0010
+#pragma warning disable SKEXP0070
+#pragma warning disable SKEXP0001
+        kernelBuilder.AddOllamaTextEmbeddingGeneration(
+            modelId: configuration["Ollama:ModelName"],           // E.g. "mxbai-embed-large" if mxbai-embed-large was downloaded as described above.
+            endpoint: new Uri(configuration["Ollama:BaseUrl"]) // E.g. "http://localhost:11434" if Ollama has been started in docker as described above.
+            //serviceId: "SERVICE_ID"             // Optional; for targeting specific services within Semantic Kernel
+        );
 
     return kernelBuilder.Build();
 });

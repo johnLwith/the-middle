@@ -6,6 +6,15 @@
 
 ## Table
 
+CREATE TABLE public."episodes_embeddings" (
+    "id" SERIAL PRIMARY KEY,
+    "episodes_id" VARCHAR(20) NOT NULL,
+    "content" TEXT,
+    "embedding" VECTOR,
+    CONSTRAINT episodes_embeddings_episodes_id_fkey FOREIGN KEY (episodes_id) 
+        REFERENCES public.episodes(id)
+);
+
 name:
 episodes_embeddings
 
@@ -21,9 +30,11 @@ columns:
 ## Implementation
 
 - 实现 embedding 存储
-    1. 从EPISODES表中读取所有的字幕
+    1. 从EPISODES表中读取所有的字幕, 每一行字幕作为一个字符串
     2. 调用ollama的mxbai-embed-large模型，将字幕转换为向量
     3. 将向量存储至episodes_embeddings表中
 
 - 通过关键字实现 embedding 搜索
     1. 从episodes_embeddings表中读取所有的向量
+
+REF:
