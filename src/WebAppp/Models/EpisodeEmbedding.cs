@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 using Microsoft.Extensions.VectorData;
 
 namespace WebAppp.Models
@@ -20,8 +21,11 @@ namespace WebAppp.Models
         [VectorStoreRecordData(StoragePropertyName = "content")]
         public string Content { get; set; }
 
+        [NotMapped]
         [Column("embedding")]
         [VectorStoreRecordVector(Dimensions: 768, DistanceFunction.CosineDistance, StoragePropertyName = "embedding")]
         public ReadOnlyMemory<float> Embedding { get; set; }
+
+        public Episode Episode { get; set; }
     }
 }

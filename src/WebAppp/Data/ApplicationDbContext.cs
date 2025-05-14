@@ -11,6 +11,7 @@ namespace WebAppp.Data
         }
 
         public DbSet<Episode> Episodes { get; set; }
+        public DbSet<EpisodeEmbedding> EpisodeEmbeddings { get; set; }
         public DbSet<Word> Words { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,6 +20,9 @@ namespace WebAppp.Data
 
             modelBuilder.Entity<Episode>()
                 .ToTable("episodes", "public");
+
+            modelBuilder.Entity<EpisodeEmbedding>()
+                .ToTable("episodes_embeddings", "public");
 
             modelBuilder.Entity<Word>()
                 .ToTable("words", "public");

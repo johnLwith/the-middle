@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api, Episode } from '../services/api';
 import EpisodeComponent from './Episode';
+import SearchBar from './SearchBar';
 import './EpisodeList.css';
 
 const EpisodeList: React.FC = () => {
@@ -32,6 +33,8 @@ const EpisodeList: React.FC = () => {
   }
 
   return (
+    <>
+    <SearchBar />
     <div className="episode-list">
       {episodes.map((episode) => (
         <EpisodeComponent
@@ -45,6 +48,8 @@ const EpisodeList: React.FC = () => {
         />
       ))}
     </div>
+    </>
+
   );
 };
 

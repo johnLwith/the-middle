@@ -11,6 +11,7 @@ namespace WebAppp.Services
 {
     public class EmbeddingService : IEmbeddingService
     {
+        private const int QuerySize = 50;
         private readonly ApplicationDbContext _context;
         private readonly HttpClient _httpClient;
         private readonly Kernel _kernel;
@@ -80,7 +81,9 @@ namespace WebAppp.Services
         {
             var result = new List<SearchResult>();
             var searchEmbedding = await GenerateEmbedding(query);
-            var searchResults = await _collection.VectorizedSearchAsync(searchEmbedding);
+            var searchResults = await _collection.VectorizedSearchAsync(searchEmbedding, new Microsoft.Extensions.VectorData.VectorSearchOptions<EpisodeEmbedding> { 
+                Top = QuerySize
+            });
             await foreach (var searchResult in searchResults.Results)
             {
                 result.Add(new SearchResult
@@ -90,6 +93,29 @@ namespace WebAppp.Services
                     Score = searchResult.Score,
                 });
             }
+            var episodeIds = result.Select(y => y.EpisodeId).ToList();
+            var idTitles = _context.Episodes.Where(x => episodeIds.Contains(x.Id))
+                                .Select(x => new SearchResult { EpisodeId = x.Id, Title = x.Title });
+            foreach (var item in result)
+            { 
+                item.Title = idTitles.Where(x=>x.EpisodeId == item.EpisodeId).First().Title;
+            }
+
+            return result;
+        }
+
+        public async Task<List<SearchResult>> SearchContent(string query)
+        {
+            var result = await _context.EpisodeEmbeddings
+                .Include(x=>x.Episode)
+                .Where(x=>x.Content.Contains(query))
+                .Take(50)
+                .Select(x=>new SearchResult {
+                    Content = x.Content,
+                    EpisodeId = x.EpisodeId,
+                    Title = x.Episode.Title
+                })
+                .ToListAsync();
             return result;
         }
     }
@@ -97,6 +123,7 @@ namespace WebAppp.Services
     public class SearchResult
     {
         public string EpisodeId { get; set; }
+        public string? Title { get; set; }
         public string Content { get; set; }
         public double? Score { get; set; }
     }
