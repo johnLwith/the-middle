@@ -3,11 +3,11 @@ using Microsoft.SemanticKernel;
 
 namespace WebAppp.Services
 {
-    public class DeepseekTranslateService : ITranslateService
+    public class TranslateService : ITranslateService
     {
         private readonly Kernel _kernel;
 
-        public DeepseekTranslateService(Kernel kernel)
+        public TranslateService(Kernel kernel)
         {
             _kernel = kernel;
         }

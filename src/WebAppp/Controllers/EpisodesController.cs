@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using WebApp.Models;
+using WebApp.Services;
 using WebAppp.Data;
 using WebAppp.Models;
 using WebAppp.Services;
@@ -20,13 +22,16 @@ namespace WebAppp.Controllers
         private readonly IWebHostEnvironment _environment;
         private readonly HttpClient _httpClient;
         private readonly INlpService _nlpService;
+        private readonly ISceneSegementService _sceneSegementService;
 
-        public EpisodesController(ApplicationDbContext context, IWebHostEnvironment environment, HttpClient httpClient, INlpService nlpService)
+        public EpisodesController(ApplicationDbContext context, IWebHostEnvironment environment, 
+            HttpClient httpClient, INlpService nlpService, ISceneSegementService sceneSegementService)
         {
             _context = context;
             _environment = environment;
             _httpClient = httpClient;
             _nlpService = nlpService;
+            _sceneSegementService = sceneSegementService;
         }
 
         [HttpGet]
@@ -169,6 +174,15 @@ namespace WebAppp.Controllers
         {
            var analysis = await _nlpService.AnalyzeTextAsync(text);
            return Ok(analysis);
+        }
+
+        [HttpPost("segement")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<List<SegementSubtitleModel>>> SegementSubtitle(string id)
+        {
+            var segements = await _sceneSegementService.SegementAsync(id);
+            return Ok(segements);
         }
     }
 }

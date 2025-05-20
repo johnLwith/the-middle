@@ -5,6 +5,7 @@ using System.Net.Http;
 using WebAppp.Services;
 using Microsoft.SemanticKernel.Connectors.Ollama;
 using Microsoft.SemanticKernel;
+using WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,10 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<OllamaTextEmbeddingGeneration>();
 builder.Services.AddScoped<INlpService, NlpService>();
-builder.Services.AddScoped<ITranslateService, DeepseekTranslateService>();
+builder.Services.AddScoped<ITranslateService, TranslateService>();
 builder.Services.AddScoped<IWordbookService, WordbookService>();
 builder.Services.AddScoped<IEmbeddingService, EmbeddingService>();
+builder.Services.AddScoped<ISceneSegementService, SceneSegementService>();
 
 builder.Services.AddSingleton<Kernel>(x => {
     var configuration = x.GetRequiredService<IConfiguration>();
