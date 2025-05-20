@@ -4,6 +4,11 @@ import { api, Episode, Subtitle } from '../services/api';
 import SubtitleItem from './SubtitleItem';
 import './EpisodeDetail.css';
 
+interface Segment {
+  segments: string;
+  description: string;
+}
+
 const POS_COLORS = {
   NOUN: '#FFEB3B',  // Updated to match nlp.ts
   VERB: '#2196F3',
@@ -31,6 +36,9 @@ const EpisodeDetail: React.FC = () => {
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [currentSubtitle, setCurrentSubtitle] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [segments, setSegments] = useState<Segment[]>([]);
+  const [loadingSegments, setLoadingSegments] = useState(false);
+  const [groupedSubtitles, setGroupedSubtitles] = useState<{[key: string]: Subtitle[]}>({});
 
 
   useEffect(() => {
@@ -111,6 +119,57 @@ const EpisodeDetail: React.FC = () => {
 
         <div className="current-subtitle">
           {currentSubtitle}
+        </div>
+
+        <div className="segment-section">
+          <button 
+            className="segment-button"
+            onClick={async () => {
+              try {
+                setLoadingSegments(true);
+                const segmentData = await api.episodes.getSegments(id!);
+                setSegments(segmentData);
+              } catch (error) {
+                console.error('Error fetching segments:', error);
+              } finally {
+                setLoadingSegments(false);
+              }
+            }}
+            disabled={loadingSegments}
+          >
+            {loadingSegments ? 'Loading Segments...' : 'Get Segments'}
+          </button>
+
+          {segments.length > 0 && (
+            <div className="segments-list">
+              {segments.map((segment, index) => {
+                const [start, end] = segment.segments.split('-').map(Number);
+                const segmentSubtitles = subtitles.slice(start - 1, end);
+                return (
+                  <div key={index} className="segment-item">
+                    <div className="segment-header">
+                      <div className="segment-range">Subtitles {segment.segments}</div>
+                      <div className="segment-description">{segment.description}</div>
+                    </div>
+                    <div className="segment-subtitles">
+                      {segmentSubtitles.map((sub, subIndex) => (
+                        <SubtitleItem
+                          key={subIndex}
+                          episodeId={id!}
+                          subtitleId={sub.id}
+                          startTime={sub.startTime}
+                          endTime={sub.endTime}
+                          text={sub.text}
+                          isActive={sub.text === currentSubtitle}
+                          onClick={handleSubtitleClick}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
         </div>
 

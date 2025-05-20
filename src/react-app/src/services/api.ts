@@ -53,6 +53,10 @@ export const api = {
     analyzeSubtitle: async (text: string): Promise<NlpAnalysisResponse> => {
       const response = await axios.get(`${API_BASE_URL}/Episodes/analyze?text=${text}`);
       return response.data;
+    },
+    getSegments: async (id: string): Promise<Array<{segments: string, description: string}>> => {
+      const response = await axios.post(`${API_BASE_URL}/Episodes/segement?id=${id}`);
+      return response.data;
     }
   }
 };

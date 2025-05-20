@@ -181,7 +181,7 @@ namespace WebAppp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<SegementSubtitleModel>>> SegementSubtitle(string id)
         {
-            var segements = await _sceneSegementService.SegementAsync(id);
+            var segements = await _sceneSegementService.SegementAsync(id, true);
             return Ok(segements);
         }
     }
