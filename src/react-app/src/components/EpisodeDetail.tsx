@@ -120,6 +120,7 @@ const EpisodeDetail: React.FC = () => {
               <SubtitleItem
                 key={index}
                 episodeId={id!}
+                subtitleId={sub.id}
                 startTime={sub.startTime}
                 endTime={sub.endTime}
                 text={sub.text}

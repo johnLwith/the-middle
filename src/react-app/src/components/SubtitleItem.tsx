@@ -5,6 +5,7 @@ import './SubtitleItem.css';
 
 interface SubtitleItemProps {
   episodeId: string;
+  subtitleId: number;
   startTime: string;
   endTime: string;
   text: string;
@@ -14,6 +15,7 @@ interface SubtitleItemProps {
 
 const SubtitleItem: React.FC<SubtitleItemProps> = ({
   episodeId,
+  subtitleId,
   startTime,
   endTime,
   text,
@@ -82,6 +84,7 @@ const SubtitleItem: React.FC<SubtitleItemProps> = ({
     onMouseEnter={() => setShowButtons(true)}
     onMouseLeave={() => setShowButtons(false)}
     >
+      <span className="subtitle-id">{subtitleId}</span>
       <span className="subtitle-time">{formatTime(startTime)}</span>
       <div className="subtitle-text-container">
         <div className="subtitle-text">
